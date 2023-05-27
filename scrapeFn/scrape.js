@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 const data = {
     list : []
 };
@@ -32,11 +33,17 @@ async function main(skill) {
                 salary,
                 companyName
             })
-        })
-    });
-    return data
+        });
+        return data;
+    }, data);
     
+    let respose = await jobData;
+    let json = await JSON.stringify(jobData, null, 2);
+    fs.writeFile('job.json', json, 'utf-8', () => {
+        console.log('written in job.json');
+    })
     browser.close();
+    return respose;
 };
 
 module.exports = main;
