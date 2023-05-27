@@ -13,6 +13,28 @@ async function main(skill) {
         timeout: 0,
         waitUntil: 'networkidle0'
     });
+
+    const jobData = await page.evaluate(async (data) => {
+        const items = document.querySelectorAll('td.resultContent');
+        items.forEach((item, index) => {
+            const title = item.querySelector('h2.jobTitle>a')?.innerText
+            const link = item.querySelector('h2.jobTitle>a')?.href
+            const salary = item.querySelector('div.metadata.salary-snippet-container > div')
+            const companyName = item.querySelector('span.companyName')
+
+            if(salary === null){
+                salary = "not defined"
+            }
+
+            data.list.push({
+                title,
+                link,
+                salary,
+                companyName
+            })
+        })
+    });
+    return data
     
     browser.close();
 };
